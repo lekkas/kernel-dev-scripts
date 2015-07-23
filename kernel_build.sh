@@ -36,7 +36,7 @@ sudo chroot "$CHROOT" /tmp/initramfs_create_chroot.sh
 
 if [ "$?" -eq 0 ];
 then
-  mv "$CHROOT"/tmp/initramfs-* "$KERNDEV_HOME"
+  sudo mv "$CHROOT"/tmp/initramfs-* "$KERNDEV_HOME"
 fi
 
 # Cleanup
