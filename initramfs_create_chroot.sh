@@ -2,6 +2,7 @@
 
 KERNEL_VER=($(ls /lib/modules))
 if [ ! "${#KERNEL_VER[*]}" -eq 1 ];
+then
   error "More than 1 kernels are present: "${KERNEL_VER[*]}
   error "You will need to create initramfs manually."
   return 1;
