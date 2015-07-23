@@ -15,8 +15,6 @@ then
   useradd -m "$USER" -G wheel
 fi
 
-# Make root passwordless for convenience.
-sed -i '/^root/ { s/:x:/::/ }' "$CHROOT"/etc/passwd
 
 # Create working directories
 mkdir -p "$CHROOT"
@@ -48,15 +46,18 @@ rpm --root="$CHROOT" --rebuilddb
 
 # Download centos-release
 push /tmp
-wget "$CENTOS7_REL"
+wget "$CENTOS7_URL"
 sudo rpm --root="$CHROOT" --nodeps -i "$CENTOS7_RPM"
 # Cleanup
-rm "$CENTOS7_RPM"
+rm /tmp/"$CENTOS7_RPM"
 pop
 
 # Install CentOS on the root image
 yum --installroot="$CHROOT" update
 yum --installroot="$CHROOT" install -y yum
+
+# Make root passwordless for convenience.
+sed -i '/^root/ { s/:x:/::/ }' "$CHROOT"/etc/passwd
 
 # TODO : Add user into VM root ?
 
