@@ -63,3 +63,5 @@ sed -i '/^root/ { s/:x:/::/ }' "$CHROOT"/etc/passwd
 
 # Cleanup and exit
 unmount "$CHROOT"
+
+echo "## Done! ##"

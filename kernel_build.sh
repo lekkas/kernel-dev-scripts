@@ -19,7 +19,7 @@ make -j$((CORES + 1))
 
 # Mount VM root partition, install kernel headers and modules
 echo "## Installing kernel headers and modules into VM root fs ##"
-sudo unmount "$CHROOT"
+sudo umount "$CHROOT" &>/dev/null
 sudo mount -o loop "$ROOTFS_IMG" "$CHROOT"
 
 sudo make headers_install INSTALL_HDR_PATH="$CHROOT"/usr/
@@ -28,14 +28,14 @@ sudo make modules_install INSTALL_MOD_PATH="$CHROOT"/
 pop
 
 echo "## Creating initramfs ##"
-cp ./initramfs_create_chroot.sh "$CHROOT"/
-sudo chroot "$CHROOT" /initramfs_create_chroot.sh
+sudo cp ./initramfs_create_chroot.sh "$CHROOT"/tmp
+sudo chroot "$CHROOT" /tmp/initramfs_create_chroot.sh
 if [ "$?" -eq 0 ];
 then
   mv "$CHROOT"/tmp/initramfs-* "$KERNDEV_HOME"
 fi
 
-sudo unmount "$CHROOT"
+sudo umount "$CHROOT" &>/dev/null
 
 
 echo "Done!"
