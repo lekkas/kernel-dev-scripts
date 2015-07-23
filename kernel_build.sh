@@ -5,7 +5,8 @@ source ./deps/kerndev-functions.sh
 
 CORES=$(grep -c ^processor /proc/cpuinfo)
 
-push ~/linux.git
+push "$LINUX_SOURCE_HOME"
+
 echo "## Configuring kernel ##"
 make mrproper
 make defconfig
@@ -24,8 +25,11 @@ sudo mount -o loop "$ROOTFS_IMG" "$CHROOT"
 sudo make headers_install INSTALL_HDR_PATH="$CHROOT"/usr/
 sudo make modules_install INSTALL_MOD_PATH="$CHROOT"/
 
+pop
+
 echo "## Creating initramfs ##"
-sudo chroot "$CHROOT" ./initramfs_create_chroot.sh
+cp ./initramfs_create_chroot.sh "$CHROOT"/
+sudo chroot "$CHROOT" /initramfs_create_chroot.sh
 if [ "$?" -eq 0 ];
 then
   mv "$CHROOT"/tmp/initramfs-* "$KERNDEV_HOME"
@@ -33,6 +37,5 @@ fi
 
 sudo unmount "$CHROOT"
 
-pop
 
 echo "Done!"

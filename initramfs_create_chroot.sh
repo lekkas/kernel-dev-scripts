@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-source ./deps/kerndev-vars.sh
-source ./deps/kerndev-functions.sh
-
 KERNEL_VER=($(ls /lib/modules))
 if [ ! "${#KERNEL_VER[*]}" -eq 1 ];
   error "More than 1 kernels are present: "${KERNEL_VER[*]}
