@@ -19,10 +19,9 @@ runAs kostas "mkdir "$KERNDEV_HOME""
 runAs kostas "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME""
 
 # Create Centos 7 root image
-cd ~/kerndev
-qemu-img create -f raw rootfs.img 30G
-mkfs.ext4 rootfs.img
-mount -o loop rootfs.img "$CHROOT"
+runAs kostas "qemu-img create -f raw $ROOTFS_IMG $ROOTFS_SIZE"
+runAs kostas mkfs.ext4 "$ROOTFS_IMG"
+mount -o loop "$ROOTFS_IMG" "$CHROOT"
 
 # Initialize RPM database
 mkdir -p "$CHROOT/var/lib/rpm"
@@ -40,22 +39,10 @@ yum --installroot="$CHROOT" install -y yum
 # Make root passwordless for convenience.
 sed -i '/^root/ { s/:x:/::/ }' "$CHROOT"/etc/passwd
 
-# Add user kostas
-# sudo chroot "$CHROOT"
-# useradd -m kostas -G wheel
-# exit
-# sudo sed -i '/^kostas/ { s/:x:/::/ }' "$CHROOT"/etc/passwd
-
-# Create initramfs
+# Install dracut to create initramfs for new kernels
 yum --installroot="$CHROOT" install -y dracut
-chroot "$CHROOT"
 
-# Sanity Check - TODO
-if [ $(ls /lib/modules | wc -l) -eq 1 ];
-  echo "more than 1 kernels are present"
-fi
-
-dracut /boot/initramfs.img "TODO KERNEL VERSION"
+# TODO : Add user?
 
 # Cleanup and exit
 unmount "$CHROOT"
