@@ -5,10 +5,10 @@ if [ ! "${#KERNEL_VER[*]}" -eq 1 ];
 then
   error "More than 1 kernels are present: "${KERNEL_VER[*]}
   error "You will need to create initramfs manually."
-  return 1;
+  exit 1
 else
-  INITRAMFS=/tmp/initramfs-${KERNEL_VER[0]}
-  dracut "$INITRAMFS" "${KERNEL_VER[0]}"
-  return 0
+  local INITRAMFS=/tmp/initramfs-${KERNEL_VER[0]}
+  dracut -f "$INITRAMFS" "${KERNEL_VER[0]}"
+  exit 0
 fi
 

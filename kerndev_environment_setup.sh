@@ -32,7 +32,7 @@ runAs kostas "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME""
 # Create Centos 7 root image
 if [ -a "$ROOTFS_IMG" ];
 then
-  echo "$ROOTFS_IMG already exists. Backing it up."
+  echo "## $ROOTFS_IMG already exists. Backing it up. ##"
   mv $ROOTFS_IMG $ROOTFS_IMG.$(date +%s)
 fi
 
