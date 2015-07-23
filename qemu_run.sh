@@ -1,5 +1,12 @@
 #!/bin/bash
 
+source ./deps/kerndev-vars.sh
+source ./deps/kerndev-functions.sh
+
+# qemu-kvm is installed under /usr/libexec
+# in CentOS 7
+export PATH=$PATH:/usr/libexec
+
 qemu-kvm -enable-kvm -nographic \
   -kernel ~/linux.git/arch/x86_64/boot/bzImage \
   -initrd ~/kerndev/initramfs-4.2.0-rc3+.img \
