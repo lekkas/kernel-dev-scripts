@@ -3,6 +3,9 @@
 source ./deps/kerndev-vars.sh
 source ./deps/kerndev-functions.sh
 
+# We need to pass env variables to sudo shell
+alias sudo='sudo -E'
+
 CORES=$(grep -c ^processor /proc/cpuinfo)
 
 push "$LINUX_SOURCE_HOME"
@@ -35,7 +38,8 @@ then
   mv "$CHROOT"/tmp/initramfs-* "$KERNDEV_HOME"
 fi
 
+# Cleanup
 sudo umount "$CHROOT" &>/dev/null
-
+unalias sudo
 
 echo "Done!"
