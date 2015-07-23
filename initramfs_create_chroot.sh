@@ -7,7 +7,7 @@ then
   error "You will need to create initramfs manually."
   exit 1
 else
-  local INITRAMFS=/tmp/initramfs-${KERNEL_VER[0]}
+  INITRAMFS=/tmp/initramfs-"${KERNEL_VER[0]}".img
   dracut -f "$INITRAMFS" "${KERNEL_VER[0]}"
   exit 0
 fi
