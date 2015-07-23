@@ -55,6 +55,8 @@ pop
 # Install CentOS on the root image
 yum --installroot="$CHROOT" update
 yum --installroot="$CHROOT" install -y yum
+# Install dracut to create initramfs image
+yum --installroot="$CHROOT" install -y dracut
 
 # Make root passwordless for convenience.
 sed -i '/^root/ { s/:x:/::/ }' "$CHROOT"/etc/passwd
