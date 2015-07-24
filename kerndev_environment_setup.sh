@@ -15,23 +15,22 @@ then
   useradd -m "$USER" -G wheel
 fi
 
-# Create working directories
-mkdir -p "$CHROOT"
-runAs "$USER" "mkdir -p "$KERNDEV_HOME""
-
 # List of packets to install on host Centos 7 kernel development machine
+echo "## Installing packages needed for kernel development into host system. ##"
 yum install -y bc git make gcc ctags make gcc
 yum install -y screen vim wget net-tools mutt cyrus-sasl cyrus-sasl-plain
 yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm
 
-# Create misc config and rc files for user dev environment
+echo "## Creating user config and rc files ##"
 runAs "$USER" "$(pwd)/createConfigFiles.sh"
+# Create working directories
+mkdir -p "$CHROOT"
+runAs "$USER" "mkdir -p "$KERNDEV_HOME""
 
-# Clone linux git repository
 echo "## Cloning linux git repository into $LINUX_SOURCE_HOME"
 runAs "$USER" "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME""
 
-# Create Centos 7 root image
+echo "## Creating Centos 7 VM root image"
 if [ -a "$ROOTFS_IMG" ];
 then
   echo "## $ROOTFS_IMG already exists. Backing it up. ##"
@@ -54,7 +53,7 @@ sudo rpm --root="$CHROOT" --nodeps -i "$CENTOS7_RPM"
 rm /tmp/"$CENTOS7_RPM"
 pop
 
-# Install CentOS on the root image
+echo "## Install CentOS base on VM root image ##"
 yum --installroot="$CHROOT" update
 yum --installroot="$CHROOT" install -y yum
 # Install dracut to create initramfs image
