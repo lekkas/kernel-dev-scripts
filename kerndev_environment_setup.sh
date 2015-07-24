@@ -15,19 +15,21 @@ then
   useradd -m "$USER" -G wheel
 fi
 
-
 # Create working directories
 mkdir -p "$CHROOT"
-runAs kostas "mkdir -p "$KERNDEV_HOME""
+runAs "$USER" "mkdir -p "$KERNDEV_HOME""
 
 # List of packets to install on host Centos 7 kernel development machine
 yum install -y bc git make gcc ctags make gcc
-yum install -y screen vim wget net-tools mutt
+yum install -y screen vim wget net-tools mutt cyrus-sasl cyrus-sasl-plain
 yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm
+
+# Create misc config and rc files for user dev environment
+runAs "$USER" "$(pwd)/createConfigFiles.sh"
 
 # Clone linux git repository
 echo "## Cloning linux git repository into $LINUX_SOURCE_HOME"
-runAs kostas "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME""
+runAs "$USER" "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME""
 
 # Create Centos 7 root image
 if [ -a "$ROOTFS_IMG" ];
@@ -36,8 +38,8 @@ then
   mv $ROOTFS_IMG $ROOTFS_IMG.$(date +%s)
 fi
 
-runAs kostas "qemu-img create -f raw $ROOTFS_IMG $ROOTFS_SIZE"
-runAs kostas "mkfs.ext4 "$ROOTFS_IMG""
+runAs "$USER" "qemu-img create -f raw "$ROOTFS_IMG $ROOTFS_SIZE""
+runAs "$USER" "mkfs.ext4 "$ROOTFS_IMG""
 mount -o loop "$ROOTFS_IMG" "$CHROOT"
 
 # Initialize RPM database
@@ -61,7 +63,7 @@ yum --installroot="$CHROOT" install -y dracut
 # Make root passwordless for convenience.
 sed -i '/^root/ { s/:x:/::/ }' "$CHROOT"/etc/passwd
 
-# TODO : Add user into VM root ?
+# TODO : Add user into VM root image ?
 
 # Cleanup and exit
 unmount "$CHROOT"
