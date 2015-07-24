@@ -37,7 +37,7 @@ then
   mv $ROOTFS_IMG $ROOTFS_IMG.$(date +%s)
 fi
 
-runAs "$USER" "qemu-img create -f raw "$ROOTFS_IMG $ROOTFS_SIZE""
+runAs "$USER" "qemu-img create -f raw "$ROOTFS_IMG" "$ROOTFS_SIZE""
 runAs "$USER" "mkfs.ext4 "$ROOTFS_IMG""
 mount -o loop "$ROOTFS_IMG" "$CHROOT"
 
