@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-source ./deps/kerndev-vars.sh
-source ./deps/kerndev-functions.sh
+USER=$(whoami)
 
 # .muttrc
 MUTTRC=/home/"$USER"/.muttrc
