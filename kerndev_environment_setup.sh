@@ -22,7 +22,7 @@ runAs kostas "mkdir -p "$KERNDEV_HOME""
 
 # List of packets to install on host Centos 7 kernel development machine
 yum install -y bc git make gcc ctags make gcc
-yum install -y screen vim wget net-tools
+yum install -y screen vim wget net-tools mutt
 yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm
 
 # Clone linux git repository

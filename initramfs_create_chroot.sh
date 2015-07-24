@@ -9,7 +9,7 @@ then
 else
   INITRAMFS=/tmp/initramfs-"${KERNEL_VER[0]}".img
   dracut -f "$INITRAMFS" "${KERNEL_VER[0]}"
-  chmod 544 "$INITRAMFS"
+  chmod 644 "$INITRAMFS"
   exit 0
 fi
 
