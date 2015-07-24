@@ -23,8 +23,8 @@ set certificate_file = "~/.mutt/certificates"
 EOF
 
 chmod 600 "$MUTTRC"
-mkdir -p /home/"USER"/.mutt/certificates
-touch /home/"USER"/.mutt/cache
+mkdir -p /home/"$USER"/.mutt/certificates
+touch /home/"$USER"/.mutt/cache
 
 # Clone dotfiles from github
 cd /home/"$USER"
