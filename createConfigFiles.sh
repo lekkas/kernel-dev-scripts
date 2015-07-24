@@ -20,13 +20,12 @@ set smtp_pass="notapassword"
 set header_cache = "~/.mutt/cache/headers"
 set message_cachedir = "~/.mutt/cache/bodies"
 set certificate_file = "~/.mutt/certificates"
-EOF 
+EOF
 
 chmod 600 "$MUTTRC"
 
 # Clone dotfiles from github
 cd /home/"$USER"
-git clone https://github.com/lekkas/dotfiles.git
+git clone https://github.com/lekkas/dotfiles.git dotfiles.git
 cd dotfiles.git
-/bin/bash dotfiles.git/makesymlinks.sh
-
+/bin/bash /home/"$USER"/dotfiles.git/makesymlinks.sh
