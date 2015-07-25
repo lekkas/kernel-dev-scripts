@@ -34,8 +34,7 @@ mkdir -p "$CHROOT"
 runAs "$USER" "mkdir -p "$KERNDEV_HOME""
 # Needed for kernel unpacking
 runAs "$USER" "mkdir -p $KERNDEV_HOME/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}"
-runAs "$USER" "echo '%_topdir %(echo $KERNDEV_HOME)/rpmbuild' > ~/.rpmmacros"
-runAs "$USER" "echo ""%_topdir "$KERNDEV_HOME"/rpmbuild" > ~/.rpmmacros"
+runAs "$USER" "echo "%_topdir "$KERNDEV_HOME"/rpmbuild" > ~/.rpmmacros"
 
 echo "## Adding .rc files into /home/"$USER" ##"
 runAs "$USER" "./createConfigFiles.sh"
