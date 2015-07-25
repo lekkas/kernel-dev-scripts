@@ -15,9 +15,13 @@ fi
 ##################################
 
 echo "## Installing packages needed for kernel development into host system ##"
-yum install -y bc git git-email make gcc ctags make gcc
+yum install -y bc git git-email make gcc ctags make gcc kernel-devel
 yum install -y screen vim wget net-tools mutt cyrus-sasl cyrus-sasl-plain
 yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm
+
+yum install -y rpm-build redhat-rpm-config asciidoc hmaccalc perl-ExtUtils-Embed pesign xmlto
+yum install -y audit-libs-devel binutils-devel elfutils-devel elfutils-libelf-devel
+yum install -y ncurses-devel newt-devel numactl-devel pciutils-devel python-devel zlib-devel
 
 echo "## Creating development environment for user "$USER" ##"
 if [ ! -d "/home/$USER" ];
@@ -28,11 +32,18 @@ fi
 
 mkdir -p "$CHROOT"
 runAs "$USER" "mkdir -p "$KERNDEV_HOME""
+# Needed for kernel unpacking
+runAs "$USER" "mkdir -p "$KERNDEV_HOME/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}""
+runAs "$USER" "echo '%_topdir %(echo $KERNDEV_HOME)/rpmbuild' > ~/.rpmmacros"
+
 echo "## Adding .rc files into /home/"$USER" ##"
 runAs "$USER" "./createConfigFiles.sh"
 
 echo "## Cloning linux git repository into $LINUX_SOURCE_HOME"
 runAs "$USER" "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME"" || true
+
+echo "## Downloading official Centos kernel sources into $CWNTOS_SOURCE_HOME"
+runAs "$USER" "rpm -i "$CENTOS7_KERNEL_URL" 2>&1 | grep -v exist
 
 #######################
 # VM Root Image Setup #
