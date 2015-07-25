@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source ./deps/kerndev-vars.sh
+source ./deps/kerndev-functions.sh
+
 USER=$(whoami)
 
 # Clone dotfiles from github and create symlinks for .vimrc, .bashrc etc
