@@ -32,6 +32,7 @@ bind editor <space> noop
 macro index gi "<change-folder>=INBOX<enter>" "Go to inbox"
 macro index gk "<change-folder>=kernel/linux-kernel<enter>" "Go to kernel"
 macro index ge "<change-folder>=kernel/eudyptula<enter>" "Go to eudyptula"
+macro index gn "<change-folder>=kernel/netdev<enter>" "Go to netdev"
 macro index gs "<change-folder>=[Google Mail]/Sent Mail<enter>" "Go to sent"
 bind index G imap-fetch-mail
 
