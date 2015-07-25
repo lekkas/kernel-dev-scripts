@@ -47,6 +47,11 @@ then
   echo "## Downloading official Centos kernel sources into $CENTOS_SOURCE_HOME"
   runAs "$USER" "wget "$CENTOS7_KERNEL_URL" -P $KERNDEV_HOME"
   runAs "$USER" "rpm -i $KERNDEV_HOME/"$CENTOS7_KERNEL_VER".src.rpm"
+  push $KERNDEV_HOME/rpmbuild/SOURCES
+  xz -d linux-$CENTOS7_KERNEL_VER.tar.xz
+  tar xf linux-$CENTOS7_KERNEL_VER.tar
+  mv linux-$CENTOS7_KERNEL_VER $KERNDEV_HOME
+  pop
 fi
 
 #######################
