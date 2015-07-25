@@ -1,4 +1,4 @@
-#vars!/usr/bin/env bash
+#!/usr/bin/env bash
 
 source ./deps/kerndev-vars.sh
 source ./deps/kerndev-functions.sh
@@ -8,27 +8,33 @@ then
   fatal "This script should be run as root."
 fi
 
-# Create dev user
+##################################
+# Development Environment Setup  #
+##################################
+
+echo "## Installing packages needed for kernel development into host system ##"
+yum install -y bc git git-email make gcc ctags make gcc
+yum install -y screen vim wget net-tools mutt cyrus-sasl cyrus-sasl-plain
+yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm
+
+echo "## Creating development environment for user "$USER" ##"
 if [ ! -d "/home/$USER" ];
 then
   echo "## Creating user $USER ##"
   useradd -m "$USER" -G wheel
 fi
 
-# List of packets to install on host Centos 7 kernel development machine
-echo "## Installing packages needed for kernel development into host system. ##"
-yum install -y bc git make gcc ctags make gcc
-yum install -y screen vim wget net-tools mutt cyrus-sasl cyrus-sasl-plain
-yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm
-
-echo "## Creating user config and rc files ##"
-runAs "$USER" "$(pwd)/createConfigFiles.sh"
-# Create working directories
 mkdir -p "$CHROOT"
 runAs "$USER" "mkdir -p "$KERNDEV_HOME""
+echo "## Adding .rc files into /home/"$USER" ##"
+runAs "$USER" "$(pwd)/createConfigFiles.sh"
 
 echo "## Cloning linux git repository into $LINUX_SOURCE_HOME"
 runAs "$USER" "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME""
+
+#######################
+# VM Root Image Setup #
+#######################
 
 echo "## Creating Centos 7 VM root image"
 if [ -a "$ROOTFS_IMG" ];
@@ -41,7 +47,7 @@ runAs "$USER" "qemu-img create -f raw "$ROOTFS_IMG" "$ROOTFS_SIZE""
 runAs "$USER" "mkfs.ext4 "$ROOTFS_IMG""
 mount -o loop "$ROOTFS_IMG" "$CHROOT"
 
-# Initialize RPM database
+# Initialize RPM database for VM root image
 mkdir -p "$CHROOT/var/lib/rpm"
 rpm --root="$CHROOT" --rebuilddb
 
