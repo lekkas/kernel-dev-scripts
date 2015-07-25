@@ -33,8 +33,9 @@ fi
 mkdir -p "$CHROOT"
 runAs "$USER" "mkdir -p "$KERNDEV_HOME""
 # Needed for kernel unpacking
-runAs "$USER" "mkdir -p "$KERNDEV_HOME/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}""
+runAs "$USER" "mkdir -p $KERNDEV_HOME/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}"
 runAs "$USER" "echo '%_topdir %(echo $KERNDEV_HOME)/rpmbuild' > ~/.rpmmacros"
+runAs "$USER" "echo ""%_topdir "$KERNDEV_HOME"/rpmbuild" > ~/.rpmmacros"
 
 echo "## Adding .rc files into /home/"$USER" ##"
 runAs "$USER" "./createConfigFiles.sh"
@@ -43,7 +44,7 @@ echo "## Cloning linux git repository into $LINUX_SOURCE_HOME"
 runAs "$USER" "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME"" || true
 
 echo "## Downloading official Centos kernel sources into $CWNTOS_SOURCE_HOME"
-runAs "$USER" "rpm -i "$CENTOS7_KERNEL_URL" 2>&1 | grep -v exist
+runAs "$USER" "rpm -i "$CENTOS7_KERNEL_URL" 2>&1 | grep -v exist"
 
 #######################
 # VM Root Image Setup #
