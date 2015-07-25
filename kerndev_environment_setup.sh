@@ -46,7 +46,7 @@ if [ ! -a $KERNDEV_HOME/"$CENTOS7_KERNEL_VER".src.rpm ];
 then
   echo "## Downloading official Centos kernel sources into $CENTOS_SOURCE_HOME"
   runAs "$USER" "wget "$CENTOS7_KERNEL_URL" -P $KERNDEV_HOME"
-  runAs "$USER" "rpm -i $KERNDEV_HOME/"$CENTOS7_KERNEL_VER".src.rpm"
+  runAs "$USER" "rpm -i $KERNDEV_HOME/$CENTOS7_KERNEL_RPM"
   push $KERNDEV_HOME/rpmbuild/SOURCES
   xz -d linux-$CENTOS7_KERNEL_VER.tar.xz
   tar xf linux-$CENTOS7_KERNEL_VER.tar

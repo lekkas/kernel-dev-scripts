@@ -9,6 +9,7 @@ alias sudo='sudo -E'
 CORES=$(grep -c ^processor /proc/cpuinfo)
 
 push "$LINUX_SOURCE_HOME"
+# push $CENTOS_SOURCE_HOME
 
 echo "## Configuring kernel ##"
 make mrproper
