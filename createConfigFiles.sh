@@ -2,12 +2,14 @@
 
 USER=$(whoami)
 
-
 # Clone dotfiles from github and create symlinks for .vimrc, .bashrc etc
-cd /home/"$USER"
+push /home/"$USER"
 git clone https://github.com/lekkas/dotfiles.git dotfiles.git
-cd dotfiles.git
+push dotfiles.git
 /bin/bash /home/"$USER"/dotfiles.git/makesymlinks.sh
+
+pop
+pop
 
 # Create .muttrc
 MUTTRC=/home/"$USER"/.muttrc

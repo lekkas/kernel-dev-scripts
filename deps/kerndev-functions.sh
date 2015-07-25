@@ -9,7 +9,7 @@ runAs ()
     echo "usage: runAs [user] [command]"
     return 1;
   fi
-  su -c "$2" - "$1"
+  su "$1" -c "$2"
 }
 
 # Displays parameteters with command name prepended, outputted to stderr.

@@ -29,7 +29,7 @@ fi
 mkdir -p "$CHROOT"
 runAs "$USER" "mkdir -p "$KERNDEV_HOME""
 echo "## Adding .rc files into /home/"$USER" ##"
-runAs "$USER" "$(pwd)/createConfigFiles.sh"
+runAs "$USER" "./createConfigFiles.sh"
 
 echo "## Cloning linux git repository into $LINUX_SOURCE_HOME"
 runAs "$USER" "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME"" || true
