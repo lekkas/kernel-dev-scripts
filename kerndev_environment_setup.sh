@@ -32,6 +32,7 @@ fi
 
 mkdir -p "$CHROOT"
 runAs "$USER" "mkdir -p "$KERNDEV_HOME""
+runAs "$USER" "mkdir -p "$KERNEL_SOURCE""
 # Needed for kernel unpacking
 runAs "$USER" "mkdir -p $KERNDEV_HOME/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}"
 runAs "$USER" "echo \"%_topdir $KERNDEV_HOME/rpmbuild\" > ~/.rpmmacros"
@@ -39,19 +40,25 @@ runAs "$USER" "echo \"%_topdir $KERNDEV_HOME/rpmbuild\" > ~/.rpmmacros"
 echo "## Adding .rc files into /home/"$USER" ##"
 runAs "$USER" "./createConfigFiles.sh"
 
-echo "## Cloning linux git repository into $LINUX_SOURCE_HOME"
-runAs "$USER" "git clone "$LINUX_GIT" "$LINUX_SOURCE_HOME"" || true
+echo "## Cloning linux git repository into $KERNEL_SOURCE/linux.git"
+runAs "$USER" "git clone "$LINUX_GIT" "$KERNEL_SOURCE"/linux.git" || true
 
-if [ ! -a $KERNDEV_HOME/"$CENTOS7_KERNEL_VER".src.rpm ];
+if [ ! -d $CENTOS7_KERNEL_DIR ];
 then
-  echo "## Downloading official Centos kernel sources into $CENTOS_SOURCE_HOME"
+  echo "## Downloading official Centos kernel sources into $KERNDEV_HOME"
   runAs "$USER" "wget "$CENTOS7_KERNEL_URL" -P $KERNDEV_HOME"
   runAs "$USER" "rpm -i $KERNDEV_HOME/$CENTOS7_KERNEL_RPM"
+
   push $KERNDEV_HOME/rpmbuild/SOURCES
-  xz -d linux-$CENTOS7_KERNEL_VER.tar.xz
-  tar xf linux-$CENTOS7_KERNEL_VER.tar
-  mv linux-$CENTOS7_KERNEL_VER $KERNDEV_HOME
+  runAs $USER "xz -d linux-$CENTOS7_KERNEL_VER.tar.xz"
+  runAs $USER "tar xf linux-$CENTOS7_KERNEL_VER.tar"
+  runAs $USER "mv linux-$CENTOS7_KERNEL_VER $KERNEL_SOURCE"
   pop
+
+  # Cleanup
+  rm $KERNDEV_HOME/$CENTOS7_KERNEL_RPM
+  rm -rf $KERNDEV_HOME/rpmbuild
+  rm /home/$USER/.rpmmacros
 fi
 
 #######################
@@ -82,7 +89,6 @@ else
   echo "## Install CentOS base on VM root image ##"
   yum --installroot="$CHROOT" update
   yum --installroot="$CHROOT" install -y yum
-  # Install dracut to create initramfs image
   yum --installroot="$CHROOT" install -y dracut
 
   # Make root passwordless for convenience.
