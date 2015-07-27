@@ -33,6 +33,7 @@ fi
 mkdir -p "$CHROOT"
 runAs "$USER" "mkdir -p "$KERNDEV_HOME""
 runAs "$USER" "mkdir -p "$KERNEL_SOURCE""
+runAs "$USER" "mkdir -p "$KERNEL_BOOT""
 # Needed for kernel unpacking
 runAs "$USER" "mkdir -p $KERNDEV_HOME/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}"
 runAs "$USER" "echo \"%_topdir $KERNDEV_HOME/rpmbuild\" > ~/.rpmmacros"
