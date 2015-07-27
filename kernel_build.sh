@@ -12,14 +12,21 @@ CORES=$(grep -c ^processor /proc/cpuinfo)
 
 if [ -z $KERNELDIR ];
 then
-  echo "Please set KERNELDIR variable to specify the kernel source directory"
+  echo "Please set the required environment variables"
+  echo "\tKERNELDIR=kernel_source_dir/ - Location of kernel source (REQUIRED)"
+  echo "\tPROPER=[y|n] - make mrproper before compilation - default is no"
   exit 1;
 fi
 
 push $KERNELDIR
 
 echo "## Configuring kernel ##"
-make mrproper
+# Set case insensitive comparison in bash
+shopt -s nocasematch
+if [ "$PROPER" == "y" ];
+then
+  make mrproper
+fi
 make defconfig
 
 # Required for systemd
@@ -28,7 +35,7 @@ scripts/config --enable fhandle
 scripts/config --enable CONFIG_DEVTMPFS_MOUNT
 
 # Set EXTRAVERSION
-set -i "/^EXTRAVERSION/ { s/$/$EXTRAVERSION/ }" $KERNELDIR/Makefile
+sed -i "/^EXTRAVERSION =$/ { s/$/$EXTRAVERSION/ }" $KERNELDIR/Makefile
 
 echo "## Compiling kernel ##"
 make -j$((CORES + 1))
