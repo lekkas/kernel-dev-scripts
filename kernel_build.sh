@@ -32,7 +32,8 @@ make defconfig
 # Required for systemd
 scripts/config --enable fhandle
 # Required or system hangs on boot
-scripts/config --enable CONFIG_DEVTMPFS_MOUNT
+scripts/config --enable DEVTMPFS_MOUNT
+scripts/config --enable DEVTMPFS
 
 # Set EXTRAVERSION
 sed -i "/^EXTRAVERSION =$/ { s/$/$EXTRAVERSION/ }" $KERNELDIR/Makefile
@@ -42,14 +43,14 @@ make -j$((CORES + 1))
 
 # Mount VM root partition, install kernel headers and modules
 echo "## Installing kernel headers and modules into VM root fs ##"
-sudo umount "$CHROOT" &>/dev/null
+sudo umount "$CHROOT" &>/dev/null || true
 sudo mount -o loop "$ROOTFS_IMG" "$CHROOT"
 
 sudo make headers_install INSTALL_HDR_PATH="$CHROOT"/usr/
 sudo make modules_install INSTALL_MOD_PATH="$CHROOT"/
 
 echo "## Copying kernel image into $KERNEL_BOOT ##"
-cp arch/"$uname -i"/boot/bzImage $KERNEL_BOOT
+cp arch/"$(uname -i)"/boot/bzImage $KERNEL_BOOT
 pop
 
 echo "## Creating initramfs ##"

@@ -8,8 +8,8 @@ source ./deps/kerndev-functions.sh
 export PATH=$PATH:/usr/libexec
 
 qemu-kvm -enable-kvm -nographic \
-  -kernel "$COMPILED_KERNEL" \
-  -initrd ~/kerndev/initramfs-4.2.0-rc3+.img \
+  -kernel "$KERNDEV_HOME/boot/bzImage" \
+  -initrd "$KERNDEV_HOME/boot/initramfs.img" \
   -hda "$ROOTFS_IMG" \
   -m 1024M -cpu host -smp 4 \
   -append "root=/dev/sda rw console=ttyS0"
