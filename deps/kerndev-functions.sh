@@ -54,3 +54,31 @@ unmount ()
 
   umount "$1" &>/dev/null || true
 }
+
+# http://stackoverflow.com/questions/15807845/list-files-and-show-them-in-a-menu-with-bash
+# Select file
+# Usage:
+# result = $(selectFile $DIRECTORY)
+# echo "result: "$(basename $result)
+selectFile ()
+{
+prompt="Select target kernel version:"
+options=( $(find "$1" -maxdepth 1 -print0 | xargs -0) )
+
+PS3="$prompt "
+select opt in "${options[@]}" "Quit" ; do
+  if (( REPLY == 1 + ${#options[@]} )) ; then
+    exit
+
+  elif (( REPLY > 0 && REPLY <= ${#options[@]} )) ; then
+    echo "$opt"
+    break
+
+  else
+    echo "Invalid option. Try another one."
+  fi
+done
+}
+
+result=$(selectFile $1)
+echo "result: "$(basename $result)
