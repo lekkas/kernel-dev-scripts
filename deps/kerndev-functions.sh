@@ -79,6 +79,3 @@ select opt in "${options[@]}" "Quit" ; do
   fi
 done
 }
-
-result=$(selectFile $1)
-echo "result: "$(basename $result)
