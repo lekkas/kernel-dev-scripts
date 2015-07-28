@@ -34,9 +34,6 @@ mkdir -p "$CHROOT"
 runAs "$USER" "mkdir -p "$KERNDEV_HOME""
 runAs "$USER" "mkdir -p "$KERNEL_SOURCE""
 runAs "$USER" "mkdir -p "$KERNEL_BOOT""
-# Needed for kernel unpacking
-runAs "$USER" "mkdir -p $KERNDEV_HOME/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}"
-runAs "$USER" "echo \"%_topdir $KERNDEV_HOME/rpmbuild\" > ~/.rpmmacros"
 
 echo "## Adding .rc files into /home/"$USER" ##"
 runAs "$USER" "./createConfigFiles.sh"
@@ -46,6 +43,10 @@ runAs "$USER" "git clone "$LINUX_GIT" "$KERNEL_SOURCE"/linux.git" || true
 
 if [ ! -d $CENTOS7_KERNEL_DIR ];
 then
+  # Needed for kernel unpacking
+  runAs "$USER" "mkdir -p $KERNDEV_HOME/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}"
+  runAs "$USER" "echo \"%_topdir $KERNDEV_HOME/rpmbuild\" > ~/.rpmmacros"
+
   echo "## Downloading official Centos kernel sources into $KERNDEV_HOME"
   runAs "$USER" "wget "$CENTOS7_KERNEL_URL" -P $KERNDEV_HOME"
   runAs "$USER" "rpm -i $KERNDEV_HOME/$CENTOS7_KERNEL_RPM"
