@@ -15,6 +15,7 @@ then
   echo "Please set the required environment variables"
   echo "\tKERNELDIR=kernel_source_dir/ - Location of kernel source (REQUIRED)"
   echo "\tPROPER=[y|n] - make mrproper before compilation - default is no"
+  echo "\tCONFIG=[y|n] - make defconfig and enable custom config settings before compilation - default is no"
   exit 1;
 fi
 
@@ -27,16 +28,20 @@ if [ "$PROPER" == "y" ];
 then
   make mrproper
 fi
-make defconfig
 
-# Required for systemd
-scripts/config --enable fhandle
-# Required or system hangs on boot
-scripts/config --enable DEVTMPFS_MOUNT
-scripts/config --enable DEVTMPFS
+if [ "$CONFIG" == "y" ];
+then
+  make defconfig
 
-# Set EXTRAVERSION
-sed -i "/^EXTRAVERSION =$/ { s/$/$EXTRAVERSION/ }" $KERNELDIR/Makefile
+  # Required for systemd
+  scripts/config --enable fhandle
+  # Required or system hangs on boot
+  scripts/config --enable DEVTMPFS_MOUNT
+  scripts/config --enable DEVTMPFS
+
+  # Set EXTRAVERSION
+  sed -i "/^EXTRAVERSION =$/ { s/$/$EXTRAVERSION/ }" $KERNELDIR/Makefile
+fi
 
 echo "## Compiling kernel ##"
 make -j$((CORES + 1))
