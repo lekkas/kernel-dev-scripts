@@ -92,6 +92,8 @@ else
   yum --installroot="$CHROOT" update
   yum --installroot="$CHROOT" install -y yum
   yum --installroot="$CHROOT" install -y dracut
+  yum --installroot="$CHROOT" install -y vim
+  yum --installroot="$CHROOT" install -y usbutils
 
   # Make root passwordless for convenience.
   sed -i '/^root/ { s/:x:/::/ }' "$CHROOT"/etc/passwd

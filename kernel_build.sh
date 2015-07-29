@@ -34,7 +34,7 @@ then
   make defconfig
 
   # Required for systemd
-  scripts/config --enable fhandle
+  scripts/config --enable FHANDLE
   # Required or system hangs on boot
   scripts/config --enable DEVTMPFS_MOUNT
   scripts/config --enable DEVTMPFS
@@ -42,6 +42,8 @@ then
   # Set EXTRAVERSION
   sed -i "/^EXTRAVERSION =$/ { s/$/$EXTRAVERSION/ }" $KERNELDIR/Makefile
 fi
+
+make oldconfig # Use .config to produce Kconfig
 
 echo "## Compiling kernel ##"
 make -j$((CORES + 1))
@@ -65,7 +67,9 @@ sudo chroot "$CHROOT" /tmp/initramfs_create_chroot.sh
 if [ "$?" -eq 0 ];
 then
   echo "## Moving initramfs into $KERNEL_BOOT ##"
-  sudo mv "$CHROOT"/tmp/initramfs-* "$KERNEL_BOOT"
+  sudo mv "$CHROOT"/tmp/initramfs-*.img "$KERNEL_BOOT"
+  sudo chown $USER $KERNEL_BOOT/initramfs-*.img
+  sudo chgrp $USER $KERNEL_BOOT/initramfs-*.img
 fi
 
 # Cleanup
