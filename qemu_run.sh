@@ -13,3 +13,13 @@ qemu-kvm -enable-kvm -nographic \
   -hda "$ROOTFS_IMG" \
   -m 1024M -cpu host -smp 4 \
   -append "root=/dev/sda rw console=ttyS0"
+# Add usb host
+# -usb -device usb-host,id=hostkbd,hostbus=3
+
+
+# In Qemu monitor (telnet localhost 1234):
+  # Detach keyboard
+  # device_del hostkbd
+
+  # Re attach keyboard
+  # device_add usb-host,hostbus=3,hostaddr=5,id=hostkbd
