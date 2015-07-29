@@ -15,9 +15,9 @@ fi
 ##################################
 
 echo "## Installing packages needed for kernel development into host system ##"
-yum install -y bc git git-email make gcc ctags make gcc kernel-devel
+yum install -y bc git git-email make gcc ctags make gcc kernel-devel telnet
 yum install -y screen vim wget net-tools mutt cyrus-sasl cyrus-sasl-plain
-yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm
+yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm usbutils
 
 yum install -y rpm-build redhat-rpm-config asciidoc hmaccalc perl-ExtUtils-Embed pesign xmlto
 yum install -y audit-libs-devel binutils-devel elfutils-devel elfutils-libelf-devel
@@ -67,11 +67,11 @@ fi
 # VM Root Image Setup #
 #######################
 
-echo "## Creating Centos 7 VM root image"
 if [ -a "$ROOTFS_IMG" ];
 then
   echo "## $ROOTFS_IMG already exists. ##"
 else
+  echo "## Creating Centos 7 VM root image"
   runAs "$USER" "qemu-img create -f raw "$ROOTFS_IMG" "$ROOTFS_SIZE""
   runAs "$USER" "mkfs.ext4 "$ROOTFS_IMG""
   mount -o loop "$ROOTFS_IMG" "$CHROOT"
@@ -93,7 +93,7 @@ else
   yum --installroot="$CHROOT" install -y yum
   yum --installroot="$CHROOT" install -y dracut
   yum --installroot="$CHROOT" install -y vim
-  yum --installroot="$CHROOT" install -y usbutils
+  yum --installroot="$CHROOT" install -y usbutils pciutils
 
   # Make root passwordless for convenience.
   sed -i '/^root/ { s/:x:/::/ }' "$CHROOT"/etc/passwd
