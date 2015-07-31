@@ -43,7 +43,7 @@ then
   sed -i "/^EXTRAVERSION =$/ { s/$/$EXTRAVERSION/ }" $KERNELDIR/Makefile
 fi
 
-make oldconfig # Use .config to produce Kconfig
+make silentoldconfig # Use .config to produce Kconfig
 
 echo "## Compiling kernel ##"
 make -j$((CORES + 1))
