@@ -13,8 +13,6 @@ sudo /usr/libexec/qemu-kvm -enable-kvm -nographic \
   -hda "$ROOTFS_IMG" \
   -m 1024M -cpu host -smp 4 \
   -append "root=/dev/sda rw console=ttyS0" \
-# Add usb host
-# -usb -device usb-host,id=hostkbd,hostbus=3
   -monitor telnet:127.0.0.1:1234,server,nowait \
   -usb
 
