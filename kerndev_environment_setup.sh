@@ -22,6 +22,7 @@ yum install -y qemu-kvm qemu-kvm-tools libvirt-daemon-kvm usbutils
 yum install -y rpm-build redhat-rpm-config asciidoc hmaccalc perl-ExtUtils-Embed pesign xmlto
 yum install -y audit-libs-devel binutils-devel elfutils-devel elfutils-libelf-devel
 yum install -y ncurses-devel newt-devel numactl-devel pciutils-devel python-devel zlib-devel
+yum install -y man-pages
 
 echo "## Creating development environment for user "$USER" ##"
 if [ ! -d "/home/$USER" ];
