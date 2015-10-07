@@ -7,17 +7,22 @@ source ./deps/kerndev-functions.sh
 # in CentOS 7
 export PATH=$PATH:/usr/libexec
 
+# Set default values for kernel and initrd
+#
+KERNEL=${KERNEL:-"$KERNDEV_HOME/boot/bzImage"}
+INITRD=${INITRD:-"$KERNDEV_HOME/boot/initramfs.img"}
+
+echo "Using kernel: ${KERNEL}"
+echo "Using initrd: ${INITRD}"
+
 sudo /usr/libexec/qemu-kvm -enable-kvm -nographic \
-  -kernel "$KERNDEV_HOME/boot/bzImage" \
-  -initrd "$KERNDEV_HOME/boot/initramfs.img" \
+  -kernel "$KERNEL" \
+  -initrd "$INITRD" \
   -hda "$ROOTFS_IMG" \
   -m 1024M -cpu host -smp 4 \
   -append "root=/dev/sda rw console=ttyS0" \
   -monitor telnet:127.0.0.1:1234,server,nowait \
   -usb
-
-#  -usb -device usb-host,id=hostkbd,hostbus=3
-#  -usb -device usb-kbd,id=hostkbd,hostbus=3,hostaddr=5 \
 
 # In Qemu monitor (telnet localhost 1234):
   # Detach keyboard
