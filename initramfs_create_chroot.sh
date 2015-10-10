@@ -24,6 +24,7 @@ select opt in "${options[@]}" "Quit" ; do
   fi
 done
 }
+
 KERNEL_VER=($(ls /lib/modules))
 if [ ! "${#KERNEL_VER[*]}" -eq 1 ];
 then
